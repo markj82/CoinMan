@@ -109,7 +109,7 @@ public class CoinMan extends ApplicationAdapter {
 	public void makeCoin() {
 		//random number between 0 and 1:
 		float height = random.nextFloat() * Gdx.graphics.getHeight(); //if 0 it goes to the bottom of screen
-																	// if 1 goes to the top of height, or somewhere between
+									      // if 1 goes to the top of height, or somewhere between
 		coinYs.add((int)height);
 		coinXs.add(Gdx.graphics.getWidth());
 	}
