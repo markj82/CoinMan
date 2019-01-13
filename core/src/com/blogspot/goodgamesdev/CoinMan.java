@@ -122,12 +122,12 @@ public class CoinMan extends ApplicationAdapter {
 	}
 
 
-			// render method - constantly repeating loop, over and over again...
+	// render method - constantly repeating loop, over and over again...
 	@Override
-	public void render () { //tu jest tak naprawde cala mechanika gry, w metodzie render
-		batch.begin(); //poczatek wszystkiego
+	public void render () { // all the logic of this game is here, in render method
+		batch.begin(); // begin of everything!
 
-		//wypelnienie calego ekranu w urzadzeniu obrazkiem z background, czyli bg.png
+		// fill full screen in mobile device with our background, bg.png
 		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		if(gameState == 1) {
@@ -160,18 +160,18 @@ public class CoinMan extends ApplicationAdapter {
 				coinCount = 0;
 				makeCoin();
 			}
+			
 			//drawing coins on the screen
-
 			coinRectangles.clear();
 			for (int i = 0; i < coinXs.size(); i++) {
 				batch.draw(coin, coinXs.get(i), coinYs.get(i));
 				coinXs.set(i, coinXs.get(i) -4);
-				// 									where                     and how big
+				// 								// where             and how big
 				coinRectangles.add(new Rectangle(coinXs.get(i), coinYs.get(i), coin.getWidth(), coin.getHeight()));
 			}
 
 
-			// when user touch screen, true
+			// when user touch screen, it is true
 			if (Gdx.input.justTouched()) {
 
 				jump.play();
@@ -196,38 +196,33 @@ public class CoinMan extends ApplicationAdapter {
 			if (manY <= 105) {
 				manY = 105;
 			}
+			} else if (gameState == 0) {
+				tapToPlay.draw(batch, "Tap to play", 100, 450);
+				// waiting to start
+				if(Gdx.input.justTouched()) {
+					gameState = 1;
+				}
 
-		} else if (gameState == 0) {
-			tapToPlay.draw(batch, "Tap to play", 100, 450);
-			// waiting to start
-			if(Gdx.input.justTouched()) {
-				gameState = 1;
+
+			} else if (gameState == 2) {
+
+			
+				//GAME OVER
+				if(Gdx.input.justTouched()) {
+					gameState = 1;
+					manY = Gdx.graphics.getHeight() / 2;
+					score = 0;
+					velocity = 0;
+					coinXs.clear();
+					coinYs.clear();
+					coinRectangles.clear();
+					coinCount = 0;
+					bombXs.clear();
+					bombYs.clear();
+					bombRectangles.clear();
+					bombCount = 0;
+				}
 			}
-
-
-		} else if (gameState == 2) {
-
-			//GAME OVER
-
-			if(Gdx.input.justTouched()) {
-
-
-				gameState = 1;
-				manY = Gdx.graphics.getHeight() / 2;
-				score = 0;
-				velocity = 0;
-				coinXs.clear();
-				coinYs.clear();
-				coinRectangles.clear();
-				coinCount = 0;
-				bombXs.clear();
-				bombYs.clear();
-				bombRectangles.clear();
-				bombCount = 0;
-			}
-
-
-		}
 
 		if (gameState == 2) {
 			//dizzy guy
@@ -249,8 +244,9 @@ public class CoinMan extends ApplicationAdapter {
 				highscore.add(score);
 				maxResult = Collections.max(highscore);
 				coinSound.play();
-
-				coinRectangles.remove(i); //ludzik i moneta jest jakas chwile razem, wiec score zwiekszal by sie caly czas, te 4 linijki temu zapobiegaja
+				
+				// coinman and coin are together for a moment, so to avoid increasing the score we need this 4 lines of code 
+				coinRectangles.remove(i);
 				coinXs.remove(i);
 				coinYs.remove(i);
 				break;
@@ -265,18 +261,17 @@ public class CoinMan extends ApplicationAdapter {
 				bombRectangles.remove(i);
 				bombXs.remove(i);
 				bombYs.remove(i);
-				bombSound.play(); //dzieki tym linijom kodu, dzwiek jest zagrany TYLKO RAZ
+				// because of this code, the sound plays only once
+				bombSound.play();
 				gameState = 2;
 				break;
 			}
 		}
 
-
-
-		font.draw(batch, String.valueOf(score), 100, 1150); // 100 i 200 is bottom left of screen
+		font.draw(batch, String.valueOf(score), 100, 1150); // 100 and 200 is bottom left of the screen
 		highScoreFont.draw(batch, String.valueOf(maxResult), 550, 1150);
 
-		batch.end(); //koniec gry
+		batch.end(); // end of the game
 	}
 	
 	@Override
